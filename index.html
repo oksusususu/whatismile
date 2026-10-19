@@ -1,0 +1,960 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080a1b">
+<title>MILE — 한 걸음씩 쌓아, 자립의 별자리를 잇다</title>
+<meta name="description" content="생활의 첫걸음을 가볍게. MILE은 자립에 필요한 생활용품과 실용적인 정보를 연결합니다.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #080a1b;
+  --panel: rgba(255,255,255,.065);
+  --panel-border: rgba(220,225,255,.16);
+  --white: #f5f4ff;
+  --muted: #b7bbd5;
+  --lavender: #c5c6ff;
+  --blue: #9baeff;
+  --serif: "Noto Serif KR", serif;
+  --sans: "Noto Sans KR", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.85;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+::selection { background: #aaaaff55; color: white; }
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -5;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 15% 12%, #292b6533, transparent 42%),
+    radial-gradient(ellipse at 90% 55%, #242c6630, transparent 40%),
+    #080a1b;
+}
+.ambient::before,
+.ambient::after {
+  content: "";
+  position: absolute;
+  width: 75vw;
+  height: 75vw;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .18;
+  animation: ambientDrift 32s ease-in-out infinite alternate;
+}
+.ambient::before {
+  top: -35vw;
+  left: -20vw;
+  background: #6958c8;
+}
+.ambient::after {
+  bottom: -45vw;
+  right: -25vw;
+  background: #385fbd;
+  animation-delay: -12s;
+}
+
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  opacity: .11;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+}
+
+.nav {
+  position: fixed;
+  z-index: 100;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, calc(100% - 36px));
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px 20px;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 22px;
+  background: rgba(9,11,30,.62);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  box-shadow: 0 12px 45px #02030d30, inset 0 1px 0 #ffffff0b;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.brand img {
+  display: block;
+  width: 94px;
+  height: auto;
+  object-fit: contain;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.5vw, 32px);
+  font-size: 12px;
+  color: #d5d7ed;
+}
+.nav-links a { transition: color .3s ease; }
+.nav-links a:hover { color: white; }
+.nav-external {
+  border: 1px solid #d9ddff42;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: #ffffff08;
+  white-space: nowrap;
+  transition: background .3s, border-color .3s;
+}
+.nav-external:hover { background: #ffffff17; border-color: #d9ddff80; }
+
+.hero {
+  min-height: 100svh;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  padding: 140px 24px 100px;
+  overflow: hidden;
+  text-align: center;
+}
+.hero-bg {
+  position: absolute;
+  inset: -5%;
+  z-index: -5;
+  background-image:
+    linear-gradient(180deg, #05061805 0%, #07091b14 48%, #080a1be0 100%),
+    url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=2600&q=95");
+  background-position: center, center 48%;
+  background-size: cover;
+  filter: saturate(1.22) contrast(1.05);
+  animation: universeMove 42s ease-in-out infinite alternate;
+}
+.nebula {
+  position: absolute;
+  inset: -15%;
+  z-index: -4;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 49% 36%, #f1eaff2b 0%, #b4a8ff20 13%, transparent 35%),
+    radial-gradient(ellipse at 20% 48%, #8153d34d 0%, #7456c51b 24%, transparent 46%),
+    radial-gradient(ellipse at 81% 34%, #5c91e43d 0%, #4d65c61c 25%, transparent 46%),
+    radial-gradient(ellipse at 60% 75%, #a16ce52b 0%, transparent 37%);
+  filter: blur(24px);
+  mix-blend-mode: screen;
+  animation: nebulaMove 24s ease-in-out infinite alternate;
+}
+.starfield {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 7% 22%, #fff 45%, transparent 75%),
+    radial-gradient(1px 1px at 13% 66%, #dbe4ff 45%, transparent 75%),
+    radial-gradient(2px 2px at 21% 35%, #fff 45%, transparent 75%),
+    radial-gradient(1px 1px at 28% 78%, #dbe4ff 45%, transparent 75%),
+    radial-gradient(2px 2px at 35% 16%, #fff 45%, transparent 75%),
+    radial-gradient(1px 1px at 43% 58%, #dbe4ff 45%, transparent 75%),
+    radial-gradient(2px 2px at 56% 22%, #fff 45%, transparent 75%),
+    radial-gradient(1px 1px at 62% 69%, #dbe4ff 45%, transparent 75%),
+    radial-gradient(2px 2px at 71% 32%, #fff 45%, transparent 75%),
+    radial-gradient(1px 1px at 79% 75%, #dbe4ff 45%, transparent 75%),
+    radial-gradient(2px 2px at 89% 24%, #fff 45%, transparent 75%),
+    radial-gradient(1px 1px at 95% 56%, #dbe4ff 45%, transparent 75%);
+  opacity: .8;
+  animation: starsDrift 38s ease-in-out infinite alternate;
+}
+.star-core {
+  position: absolute;
+  z-index: -2;
+  left: 50%;
+  top: 27%;
+  width: clamp(180px, 28vw, 370px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle,
+    #fff 0%, #f0f1ff 1.5%, #cbd7ff 3%,
+    #a7b9ff8c 6%, #8c9cff40 15%,
+    #9583ff19 31%, transparent 69%);
+  filter: blur(.6px);
+  box-shadow: 0 0 60px 14px #a8bbff20, 0 0 140px 45px #8277ff1b;
+  animation: starPulse 7s ease-in-out infinite alternate;
+}
+.star-core::before,
+.star-core::after {
+  content: "";
+  position: absolute;
+  inset: 17%;
+  border-radius: 50%;
+  border: 1px solid #dfe6ff17;
+  box-shadow: 0 0 55px #a7b8ff10;
+  animation: haloRotate 36s linear infinite;
+}
+.star-core::after {
+  inset: 29%;
+  border-color: #e8e8ff12;
+  animation-direction: reverse;
+  animation-duration: 24s;
+}
+.light-beam {
+  position: absolute;
+  z-index: -1;
+  width: min(65vw, 760px);
+  height: 2px;
+  left: 50%;
+  top: 28%;
+  transform: translate(-50%, -50%) rotate(-24deg);
+  background: linear-gradient(90deg, transparent, #c6d5ff20, #fff9, #b8caff30, transparent);
+  filter: blur(1px);
+  opacity: .45;
+  animation: beamShimmer 9s ease-in-out infinite alternate;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: min(900px, 100%);
+  margin-top: 3vh;
+  animation: heroArrive 1.6s cubic-bezier(.2,.75,.25,1) both;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #d9dcff;
+  font-size: 11px;
+  letter-spacing: .17em;
+  margin-bottom: 26px;
+}
+.eyebrow::before,
+.eyebrow::after {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c7caffaa);
+}
+.eyebrow::after { transform: rotate(180deg); }
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(43px, 7.3vw, 91px);
+  letter-spacing: -.075em;
+  line-height: 1.42;
+  margin: 0;
+  text-shadow: 0 0 45px #c5c9ff18;
+}
+.hero h1 span {
+  display: block;
+  background: linear-gradient(110deg, #fff 10%, #d7d7ff 47%, #b5c8ff 76%, #fff 96%);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.hero-description {
+  max-width: 500px;
+  margin: 26px auto 0;
+  color: #d4d6eb;
+  font-size: clamp(13px, 1.5vw, 15px);
+  line-height: 2.15;
+  word-break: keep-all;
+}
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  min-height: 49px;
+  padding: 0 22px;
+  border: 1px solid #dfe2ff35;
+  border-radius: 999px;
+  font-size: 12px;
+  transition: transform .35s, background .35s, border-color .35s, box-shadow .35s;
+}
+.button:hover {
+  transform: translateY(-3px);
+  border-color: #e1e4ff88;
+  box-shadow: 0 10px 35px #9faaff16;
+}
+.button-primary {
+  background: linear-gradient(120deg, #d8d8ff, #aabaff);
+  color: #14162e;
+  border-color: transparent;
+  box-shadow: 0 0 35px #aeb9ff26;
+}
+.button-primary:hover { background: #eeeaff; }
+.button-glass { background: #ffffff0b; backdrop-filter: blur(16px); }
+.scroll-cue {
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #c8cce5a6;
+  font-size: 10px;
+  letter-spacing: .18em;
+}
+.scroll-cue::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 34px;
+  margin: 10px auto 0;
+  background: linear-gradient(#cbd2ff9c, transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+
+section { position: relative; }
+.section {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 130px 0;
+}
+.section-heading { max-width: 690px; margin-bottom: 52px; }
+.section-label {
+  color: #b9c1ff;
+  font-size: 11px;
+  letter-spacing: .16em;
+  margin-bottom: 16px;
+}
+.section h2 {
+  font-family: var(--serif);
+  font-size: clamp(30px, 4.5vw, 51px);
+  line-height: 1.5;
+  letter-spacing: -.055em;
+  font-weight: 300;
+  margin: 0;
+}
+.section-heading p {
+  margin: 19px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 570px;
+  word-break: keep-all;
+}
+.glass {
+  background: linear-gradient(135deg, #ffffff14, #ffffff05);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(26px) saturate(145%);
+  -webkit-backdrop-filter: blur(26px) saturate(145%);
+  box-shadow: inset 0 1px 0 #ffffff12, 0 18px 65px #02030e20;
+}
+.glass:hover {
+  border-color: #d9ddff38;
+  background: linear-gradient(135deg, #ffffff19, #ffffff08);
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.problem-card {
+  min-height: 245px;
+  padding: 30px;
+  border-radius: 24px;
+  transition: transform .45s, border-color .45s, background .45s;
+}
+.problem-card:hover { transform: translateY(-5px); }
+.card-index {
+  color: #aeb7ff;
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  letter-spacing: .13em;
+}
+.problem-card h3,
+.service-card h3,
+.progress-card h3 {
+  margin: 23px 0 12px;
+  font-size: 18px;
+  font-weight: 400;
+}
+.problem-card p,
+.service-card p,
+.progress-card p {
+  margin: 0;
+  color: #bfc2da;
+  font-size: 13px;
+  word-break: keep-all;
+}
+.statement {
+  margin-top: 18px;
+  padding: 32px;
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 90% 0%, #a1aaff20, transparent 40%),
+    linear-gradient(120deg, #ffffff0e, #ffffff04);
+  border: 1px solid #d8dcff22;
+  font-family: var(--serif);
+  font-size: clamp(21px, 3vw, 30px);
+  line-height: 1.7;
+  word-break: keep-all;
+}
+.statement em { color: #c7caff; font-style: normal; }
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.service-card {
+  position: relative;
+  min-height: 340px;
+  padding: 28px;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: transform .45s, border-color .45s;
+}
+.service-card:hover { transform: translateY(-7px); }
+.service-card::before {
+  content: "";
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: -85px;
+  top: -90px;
+  background: radial-gradient(circle, #aab5ff23, transparent 70%);
+  transition: transform .7s;
+}
+.service-card:hover::before { transform: scale(1.6); }
+.service-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  border: 1px solid #dbe0ff2a;
+  background: linear-gradient(145deg, #ffffff15, #ffffff04);
+  color: #d0d5ff;
+  font-size: 21px;
+  box-shadow: inset 0 1px 0 #ffffff12;
+}
+.service-card h3 { margin-top: 25px; }
+.service-tag {
+  display: inline-block;
+  margin-top: 24px;
+  color: #bfc5ff;
+  font-size: 10px;
+  border: 1px solid #c5cbff30;
+  background: #aebaff0b;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.kit-layout {
+  display: grid;
+  grid-template-columns: .95fr 1.05fr;
+  gap: 22px;
+  align-items: stretch;
+}
+.kit-visual {
+  min-height: 450px;
+  border-radius: 28px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: end;
+  background:
+    radial-gradient(ellipse at 65% 22%, #9e9aff30, transparent 40%),
+    linear-gradient(145deg, #171a3b, #0e1127 70%);
+}
+.kit-visual::before {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  top: 3%;
+  right: -10%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #aaaaff24, #8585ff08 40%, transparent 70%);
+  animation: orbPulse 8s ease-in-out infinite alternate;
+}
+.kit-visual-content { position: relative; z-index: 1; }
+.kit-visual-content small { color: #c4c8ff; font-size: 11px; }
+.kit-visual-content h3 {
+  font-family: var(--serif);
+  font-size: 31px;
+  line-height: 1.5;
+  font-weight: 300;
+  margin: 10px 0;
+}
+.kit-visual-content p { color: #c4c7de; font-size: 13px; margin: 0; }
+.kit-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.kit-detail {
+  flex: 1;
+  padding: 23px 25px;
+  border-radius: 21px;
+  transition: transform .4s;
+}
+.kit-detail:hover { transform: translateX(4px); }
+.kit-detail h3 { margin: 0 0 7px; font-weight: 400; font-size: 15px; }
+.kit-detail p { margin: 0; color: var(--muted); font-size: 12px; word-break: keep-all; }
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+.audience-card {
+  padding: 25px;
+  border-radius: 22px;
+}
+.audience-card .number {
+  color: #b9c1ff;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+}
+.audience-card h3 { font-weight: 400; font-size: 16px; margin: 15px 0 8px; }
+.audience-card p { font-size: 12px; color: var(--muted); margin: 0; word-break: keep-all; }
+
+.vision {
+  overflow: hidden;
+  border-top: 1px solid #d9ddff15;
+  border-bottom: 1px solid #d9ddff15;
+  background:
+    radial-gradient(ellipse at 50% 0%, #665cb52c, transparent 48%),
+    radial-gradient(ellipse at 90% 70%, #3f64b51a, transparent 35%);
+}
+.vision-inner {
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 130px 0;
+  text-align: center;
+}
+.vision-inner h2 { max-width: 760px; margin: 0 auto; }
+.vision-inner p {
+  max-width: 620px;
+  margin: 22px auto 0;
+  color: #c1c5df;
+  font-size: 14px;
+  word-break: keep-all;
+}
+.vision-pillars {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 13px;
+  text-align: left;
+}
+.pillar { border-radius: 20px; padding: 23px; }
+.pillar strong { font-size: 14px; font-weight: 400; }
+.pillar p { font-size: 12px; margin: 8px 0 0; }
+
+.closing {
+  position: relative;
+  overflow: hidden;
+  padding: 120px 24px 85px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 15%, #8586ff1c, transparent 45%),
+    linear-gradient(180deg, #080a1b, #0d1027);
+}
+.closing::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  left: 50%;
+  top: -360px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #a4aaff1a, transparent 68%);
+}
+.closing h2 {
+  position: relative;
+  font-family: var(--serif);
+  font-size: clamp(28px, 4.8vw, 51px);
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: -.05em;
+  margin: 0;
+}
+.closing p { color: #c0c4df; font-size: 13px; margin: 17px 0 28px; }
+.closing .english {
+  display: block;
+  margin-top: 42px;
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(20px, 3vw, 30px);
+  letter-spacing: .08em;
+  color: #e0e1ff;
+}
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 24px 0 35px;
+  border-top: 1px solid #d9ddff17;
+  color: #898eae;
+  font-size: 11px;
+}
+footer img { width: 70px; height: auto; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.delay-1 { transition-delay: .1s; }
+.delay-2 { transition-delay: .2s; }
+.delay-3 { transition-delay: .3s; }
+
+@keyframes universeMove {
+  from { transform: scale(1) translate3d(-.2%, 0, 0); }
+  to { transform: scale(1.09) translate3d(.4%, -.5%, 0); }
+}
+@keyframes nebulaMove {
+  from { transform: translate3d(-1.3%, .7%, 0) scale(.96); opacity: .55; }
+  to { transform: translate3d(1.3%, -.7%, 0) scale(1.06); opacity: 1; }
+}
+@keyframes starsDrift {
+  from { transform: translate3d(-.3%, 0, 0); opacity: .6; }
+  to { transform: translate3d(.3%, -.4%, 0); opacity: .95; }
+}
+@keyframes starPulse {
+  from { opacity: .65; filter: blur(1px); transform: translate(-50%,-50%) scale(.94); }
+  to { opacity: 1; filter: blur(0); transform: translate(-50%,-50%) scale(1.06); }
+}
+@keyframes haloRotate { to { transform: rotate(360deg); } }
+@keyframes beamShimmer {
+  from { opacity: .12; transform: translate(-50%,-50%) rotate(-24deg) scaleX(.72); }
+  to { opacity: .62; transform: translate(-50%,-50%) rotate(-24deg) scaleX(1.1); }
+}
+@keyframes ambientDrift {
+  from { transform: translate3d(-2%, -1%, 0) scale(.9); }
+  to { transform: translate3d(4%, 3%, 0) scale(1.08); }
+}
+@keyframes heroArrive {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollLine {
+  0%, 100% { transform: scaleY(.65); transform-origin: top; opacity: .45; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+}
+
+@media (max-width: 850px) {
+  .nav { width: calc(100% - 24px); top: 10px; padding: 10px 13px; }
+  .nav-links { gap: 13px; }
+  .nav-links a:nth-child(2), .nav-links a:nth-child(3) { display: none; }
+  .brand img { width: 78px; }
+  .section { padding: 90px 0; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .service-card:last-child { grid-column: 1 / -1; min-height: 260px; }
+  .kit-layout { grid-template-columns: 1fr; }
+  .kit-visual { min-height: 300px; }
+}
+@media (max-width: 580px) {
+  .nav { border-radius: 18px; }
+  .nav-links { font-size: 11px; gap: 10px; }
+  .nav-external { padding: 8px 10px; font-size: 10px; }
+  .hero { padding: 125px 22px 90px; }
+  .hero h1 { font-size: clamp(39px, 11vw, 60px); }
+  .hero-description { font-size: 13px; }
+  .section { width: calc(100% - 36px); padding: 78px 0; }
+  .section-heading { margin-bottom: 32px; }
+  .problem-grid, .services-grid, .audience-grid, .vision-pillars { grid-template-columns: 1fr; }
+  .problem-card { min-height: auto; padding: 25px; }
+  .service-card, .service-card:last-child { grid-column: auto; min-height: auto; padding: 25px; }
+  .statement { padding: 24px; }
+  .vision-inner { width: calc(100% - 36px); padding: 85px 0; }
+  .closing { padding: 90px 20px 65px; }
+  footer { width: calc(100% - 36px); flex-wrap: wrap; }
+  .star-core { top: 25%; width: 240px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<div class="noise" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="brand" href="#home" aria-label="MILE 첫 화면">
+    <img src="assets/mile-logo.png" alt="MILE 로고"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span style="display:none;font-family:'DM Sans',sans-serif;font-size:27px;letter-spacing:-2px;color:#e6e5ff">mile✦</span>
+  </a>
+  <nav class="nav-links" aria-label="주요 메뉴">
+    <a href="#story">문제 인식</a>
+    <a href="#solution">서비스</a>
+    <a href="#kit">첫걸음 키트</a>
+    <a href="#vision">비전</a>
+  </nav>
+  <a class="nav-external" href="https://oksusususu.github.io/milehomepage03/" target="_blank" rel="noopener noreferrer">기존 웹사이트 ↗</a>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="nebula" aria-hidden="true"></div>
+    <div class="starfield" aria-hidden="true"></div>
+    <div class="star-core" aria-hidden="true"></div>
+    <div class="light-beam" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <div class="eyebrow">자립의 첫걸음을 위한 생활 솔루션</div>
+      <h1>한 걸음씩 쌓아,<span>자립의 별자리를 잇다.</span></h1>
+      <p class="hero-description">
+        새로운 생활을 시작하는 순간에 필요한 물품과 정보를 연결합니다.<br>
+        낯선 시작이 조금 더 가벼워질 수 있도록.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#solution">마일 알아보기 <span>↗</span></a>
+        <a class="button button-glass" href="https://oksusususu.github.io/milehomepage03/" target="_blank" rel="noopener noreferrer">기존 웹사이트 방문</a>
+      </div>
+    </div>
+    <div class="scroll-cue">SCROLL TO EXPLORE</div>
+  </section>
+
+  <section id="story">
+    <div class="section">
+      <div class="section-heading reveal">
+        <div class="section-label">01 · 문제 인식</div>
+        <h2>처음이라는 순간에는<br>생각보다 많은 준비가 필요합니다.</h2>
+        <p>기숙사 생활과 자취, 새로운 독립을 시작할 때 생활에 필요한 물품을 하나씩 알아보고 준비하는 과정은 생각보다 복잡합니다.</p>
+      </div>
+
+      <div class="problem-grid">
+        <article class="problem-card glass reveal delay-1">
+          <div class="card-index">01 / DAILY LIFE</div>
+          <h3>무엇부터 준비해야 할지 막막한 시작</h3>
+          <p>생활에 필요한 물품은 다양하지만, 처음부터 모든 것을 알고 준비하기는 어렵습니다. 빠뜨린 물품을 다시 구매하는 과정에서 시간과 비용이 더해집니다.</p>
+        </article>
+        <article class="problem-card glass reveal delay-2">
+          <div class="card-index">02 / PRACTICAL INFORMATION</div>
+          <h3>흩어져 있는 생활 정보</h3>
+          <p>세탁과 청소 같은 일상적인 생활 관리부터 자립에 필요한 정보까지, 필요한 내용을 찾아 정리하는 데에도 노력이 필요합니다.</p>
+        </article>
+      </div>
+
+      <div class="statement reveal">
+        생활의 첫걸음을 <em>조금 더 가볍게.</em><br>
+        준비의 부담을 줄이고, 새로운 일상에 집중할 수 있도록.
+      </div>
+    </div>
+  </section>
+
+  <section id="solution">
+    <div class="section">
+      <div class="section-heading reveal">
+        <div class="section-label">02 · 서비스 구성</div>
+        <h2>필요한 물품부터 생활 정보까지,<br>하나의 경험으로 연결합니다.</h2>
+        <p>MILE은 생활용품을 준비하는 과정과 실제 생활에 필요한 정보를 연결해 자립의 시작을 돕는 서비스를 기획합니다.</p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card glass reveal delay-1">
+          <div class="service-icon">✧</div>
+          <h3>첫걸음 키트</h3>
+          <p>새로운 생활을 시작할 때 필요한 기본 생활용품을 한데 모아, 준비 과정의 번거로움을 줄이는 생활용품 키트입니다.</p>
+          <span class="service-tag">생활용품 구성</span>
+        </article>
+        <article class="service-card glass reveal delay-2">
+          <div class="service-icon">⌁</div>
+          <h3>생활 안내 자료</h3>
+          <p>미니북과 QR 안내 카드를 통해 물품 사용법과 기본적인 생활 관리 정보를 쉽게 확인할 수 있도록 구성합니다.</p>
+          <span class="service-tag">미니북 · QR 카드</span>
+        </article>
+        <article class="service-card glass reveal delay-3">
+          <div class="service-icon">✦</div>
+          <h3>info-mile</h3>
+          <p>자립과 생활에 필요한 정책 및 실용 정보를 탐색할 수 있도록 돕는 정보 플랫폼입니다.</p>
+          <a class="service-tag" href="https://oksusususu.github.io/milehomepage03/" target="_blank" rel="noopener noreferrer">정보 페이지 살펴보기 ↗</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="kit">
+    <div class="section">
+      <div class="section-heading reveal">
+        <div class="section-label">03 · 첫걸음 키트</div>
+        <h2>생활에 필요한 것들을<br>하나씩 고민하는 시간을 줄입니다.</h2>
+        <p>첫걸음 키트는 새로운 생활을 준비하는 사람이 기본적인 생활용품을 보다 편리하게 마련하도록 기획한 핵심 구성입니다.</p>
+      </div>
+
+      <div class="kit-layout">
+        <div class="kit-visual glass reveal">
+          <div class="kit-visual-content">
+            <small>MILE · FIRST STEP KIT</small>
+            <h3>새로운 일상을 위한<br>작은 준비.</h3>
+            <p>생활의 시작에 필요한 기본을 한곳에.</p>
+          </div>
+        </div>
+        <div class="kit-details">
+          <article class="kit-detail glass reveal delay-1">
+            <h3>기본 생활용품</h3>
+            <p>세탁과 청소, 위생 관리 등 일상에서 반복적으로 사용하는 생활용품을 중심으로 구성합니다.</p>
+          </article>
+          <article class="kit-detail glass reveal delay-2">
+            <h3>사용을 돕는 안내</h3>
+            <p>계량과 사용 방법을 안내하는 자료를 연계해 물품을 구매하는 데서 그치지 않고 실제 생활에 활용하도록 돕습니다.</p>
+          </article>
+          <article class="kit-detail glass reveal delay-3">
+            <h3>생활 단계에 맞춘 확장</h3>
+            <p>기숙사 생활과 대학생의 자취 등 사용 환경에 따른 필요를 고려해 키트 구성을 발전시킵니다.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="audience">
+    <div class="section">
+      <div class="section-heading reveal">
+        <div class="section-label">04 · 지원 대상</div>
+        <h2>서로 다른 시작에<br>각자의 생활 솔루션을 제공합니다.</h2>
+        <p>생활 환경과 필요한 준비가 다른 사람들을 고려해 서비스의 적용 범위를 단계적으로 넓혀갑니다.</p>
+      </div>
+
+      <div class="audience-grid">
+        <article class="audience-card glass reveal delay-1">
+          <div class="number">01 / DORMITORY</div>
+          <h3>기숙사 생활을 시작하는 학생</h3>
+          <p>제한된 공간에서 생활에 필요한 물품을 효율적으로 준비할 수 있도록 돕습니다.</p>
+        </article>
+        <article class="audience-card glass reveal delay-2">
+          <div class="number">02 / FIRST HOME</div>
+          <h3>자취를 시작하는 대학생</h3>
+          <p>처음 마련하는 생활용품과 일상 관리 정보를 함께 제공해 독립 생활의 부담을 줄입니다.</p>
+        </article>
+        <article class="audience-card glass reveal delay-3">
+          <div class="number">03 / INDEPENDENCE</div>
+          <h3>자립을 준비하는 청년</h3>
+          <p>생활의 기본을 마련하고 필요한 정보를 찾는 과정에서 실질적인 도움을 제공하는 방향으로 발전합니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="vision" id="vision">
+    <div class="vision-inner">
+      <div class="section-label reveal">05 · 브랜드 비전</div>
+      <h2 class="reveal">작은 준비가 모여<br>스스로 살아가는 힘이 되도록.</h2>
+      <p class="reveal">
+        MILE은 생활용품과 정보의 연결을 통해 새로운 시작의 부담을 덜고,
+        누구나 자신의 일상을 차근차근 만들어 갈 수 있는 환경을 지향합니다.
+      </p>
+
+      <div class="vision-pillars">
+        <article class="pillar glass reveal delay-1">
+          <strong>생활의 접근성</strong>
+          <p>필요한 물품과 정보를 한곳에서 확인할 수 있는 편리한 경험을 만듭니다.</p>
+        </article>
+        <article class="pillar glass reveal delay-2">
+          <strong>실질적인 도움</strong>
+          <p>일상에서 바로 활용할 수 있는 구성과 안내를 중심으로 서비스를 설계합니다.</p>
+        </article>
+        <article class="pillar glass reveal delay-3">
+          <strong>자립의 가능성</strong>
+          <p>작은 준비가 독립적인 생활을 이어 가는 기반이 될 수 있도록 고민합니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <h2 class="reveal">한 걸음씩 쌓아,<br>자립의 별자리를 잇다.</h2>
+    <p class="reveal">새로운 생활의 시작에 MILE이 함께합니다.</p>
+    <a class="button button-primary reveal" href="https://oksusususu.github.io/milehomepage03/" target="_blank" rel="noopener noreferrer">기존 MILE 웹사이트 ↗</a>
+    <span class="english reveal">Small Steps, Brighter Life.</span>
+  </section>
+</main>
+
+<footer>
+  <a href="#home" aria-label="맨 위로">
+    <img src="assets/mile-logo.png" alt="MILE" onerror="this.style.display='none'">
+  </a>
+  <span>생활의 첫걸음을 위한 생활 솔루션 · MILE</span>
+  <a href="#home">맨 위로 ↑</a>
+</footer>
+
+<script>
+(() => {
+  const elements = document.querySelectorAll(".reveal");
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    elements.forEach(element => observer.observe(element));
+  } else {
+    elements.forEach(element => element.classList.add("visible"));
+  }
+
+  // Subtle cursor parallax on desktop, disabled for touch and reduced-motion users.
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const touchDevice = window.matchMedia("(pointer: coarse)").matches;
+  const heroBg = document.querySelector(".hero-bg");
+  const nebula = document.querySelector(".nebula");
+
+  if (!reducedMotion && !touchDevice && heroBg && nebula) {
+    window.addEventListener("pointermove", (event) => {
+      const x = (event.clientX / window.innerWidth - 0.5);
+      const y = (event.clientY / window.innerHeight - 0.5);
+      heroBg.style.setProperty("background-position",
+        `center, calc(50% + ${x * -12}px) calc(48% + ${y * -10}px)`);
+      nebula.style.transform = `translate3d(${x * 9}px, ${y * 7}px, 0)`;
+    }, { passive: true });
+  }
+})();
+</script>
+</body>
+</html>
